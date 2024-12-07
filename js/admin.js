@@ -87,6 +87,8 @@ function crearProducto() {
   limpiarFormulario();
   //Guardar el array de productos dentro de LocalStorage
   guardarLocalStorage()
+  //Cargar el producto a la tabla
+  crearFila(productoNuevo)
 }
 
 function limpiarFormulario(){
@@ -104,4 +106,23 @@ function limpiarFormulario(){
 
 function guardarLocalStorage(){
   localStorage.setItem("arrayProductosKey", JSON.stringify(listaProductos))
+}
+
+function crearFila(producto){
+  let tablaProductos = document.querySelector('#tablaProductos');
+  //Usando el operador de asignación de adición vamos a concatenar al contenido del tbody una fila
+  tablaProductos.innerHTML += `<tr>
+      <td scope="col">${producto.codigo}</td>
+      <td scope="col">${producto.producto}</td>
+      <td scope="col">${producto.descripcion}</td>
+      <td scope="col">${producto.cantidad}</td>
+      <td scope="col">${producto.url}</td>
+      <td> <button class="btn btn-warning" onclick ="prepararEdicionProducto()">
+          Editar
+        </button>
+        <button class="btn btn-danger" onclick="borrarProducto()">
+          Eliminar
+        </button>
+      </td>
+    </tr>`
 }
