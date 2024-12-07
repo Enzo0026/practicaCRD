@@ -5,10 +5,10 @@ import {
   validarGeneral,
 } from "./validaciones.js";
 
+import { Producto } from "./productoClass.js";
+
 //Traigo los elementos que necesito del html
 let campoCodigo = document.getElementById("codigo");
-
-console.log(campoCodigo);
 
 let campoProducto = document.getElementById("producto");
 let campoDescripcion = document.getElementById("descripcion");
@@ -17,8 +17,10 @@ let campoURL = document.getElementById("URL");
 
 let formProductos = document.querySelector("#formProductos");
 
-let productoExistente = false; //Variable bandera: si productoExistente es false, quiero crear, 
+let productoExistente = false; //Variable bandera: si productoExistente es false, quiero crear,
 //si es true, quiero modificar el producto existente
+
+let listaProductos = [];
 
 //Asociar un evento a cada elemento obtenido
 
@@ -62,10 +64,44 @@ function guardarProducto(event) {
   ) {
     if (!productoExistente) {
       //Crear producto
-      crearProducto()
-    }else {
+      crearProducto();
+    } else {
       //Modificar producto
-      modificarProducto()
+      modificarProducto();
     }
   }
+}
+
+function crearProducto() {
+  //crear un objeto producto
+  let productoNuevo = new Producto(
+    campoCodigo.value,
+    campoProducto.value,
+    campoDescripcion.value,
+    campoCantidad.value,
+    campoURL.value
+  );
+  //Guardar cada objeto (producto) en un array de productos
+  listaProductos.push(productoNuevo);
+  //Limpiar formulario
+  limpiarFormulario();
+  //Guardar el array de productos dentro de LocalStorage
+  guardarLocalStorage()
+}
+
+function limpiarFormulario(){
+  //Limpiamos los value del formulario
+  formProductos.reset();
+  //Resetear las clases de los input
+  campoCodigo.className = "form-control";
+  campoProducto.className = "form-control";
+  campoDescripcion.className = "form-control";
+  campoCantidad.className = "form-control";
+  campoURL.className = "form-control";
+  //Resetear la variable bandera o booleana para el caso de modificarProducto
+  productoExistente = false;
+}
+
+function guardarLocalStorage(){
+  localStorage.setItem("arrayProductosKey", JSON.stringify(listaProductos))
 }
