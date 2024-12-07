@@ -20,7 +20,8 @@ let formProductos = document.querySelector("#formProductos");
 let productoExistente = false; //Variable bandera: si productoExistente es false, quiero crear,
 //si es true, quiero modificar el producto existente
 
-let listaProductos = [];
+//Si hay productos en localStorage quiero guardarlos en listaProductos, si no listaProductos sea un array vacío
+let listaProductos = JSON.parse(localStorage.getItem("arrayProductosKey")) || [];
 
 //Asociar un evento a cada elemento obtenido
 
@@ -46,6 +47,10 @@ campoURL.addEventListener("blur", () => {
 });
 
 formProductos.addEventListener("submit", guardarProducto);
+
+//Llamo a la función cargaInicial(): si tengo productos en el localStorage, los muestre en la tabla
+
+cargaInicial()
 
 //Empieza la lógica del CRUD
 
@@ -86,12 +91,12 @@ function crearProducto() {
   //Limpiar formulario
   limpiarFormulario();
   //Guardar el array de productos dentro de LocalStorage
-  guardarLocalStorage()
+  guardarLocalStorage();
   //Cargar el producto a la tabla
-  crearFila(productoNuevo)
+  crearFila(productoNuevo);
 }
 
-function limpiarFormulario(){
+function limpiarFormulario() {
   //Limpiamos los value del formulario
   formProductos.reset();
   //Resetear las clases de los input
@@ -104,12 +109,12 @@ function limpiarFormulario(){
   productoExistente = false;
 }
 
-function guardarLocalStorage(){
-  localStorage.setItem("arrayProductosKey", JSON.stringify(listaProductos))
+function guardarLocalStorage() {
+  localStorage.setItem("arrayProductosKey", JSON.stringify(listaProductos));
 }
 
-function crearFila(producto){
-  let tablaProductos = document.querySelector('#tablaProductos');
+function crearFila(producto) {
+  let tablaProductos = document.querySelector("#tablaProductos");
   //Usando el operador de asignación de adición vamos a concatenar al contenido del tbody una fila
   tablaProductos.innerHTML += `<tr>
       <td scope="col">${producto.codigo}</td>
@@ -117,12 +122,22 @@ function crearFila(producto){
       <td scope="col">${producto.descripcion}</td>
       <td scope="col">${producto.cantidad}</td>
       <td scope="col">${producto.url}</td>
-      <td> <button class="btn btn-warning" onclick ="prepararEdicionProducto()">
+      <td> <button class="btn btn-warning mb-3" onclick ="prepararEdicionProducto()">
           Editar
         </button>
-        <button class="btn btn-danger" onclick="borrarProducto()">
+        <button class="btn btn-danger mb-3" onclick="borrarProducto()">
           Eliminar
         </button>
       </td>
-    </tr>`
+    </tr>`;
+}
+
+
+function cargaInicial(){
+  if (listaProductos.length > 0) {
+    //Crear las filas
+    //listaProductos.forEach((itemProducto)=> crearFila(itemProducto))
+    listaProductos.map((itemProducto)=> crearFila(itemProducto))
+    
+  }
 }
