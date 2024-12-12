@@ -17,6 +17,7 @@ let campoURL = document.getElementById("URL");
 
 let formProductos = document.querySelector("#formProductos");
 let btnNuevo = document.getElementById("btnNuevo");
+let btnDatosPrueba = document.getElementById("btnDatosPrueba")
 
 let productoExistente = false; //Variable bandera: si productoExistente es false, quiero crear,
 //si es true, quiero modificar el producto existente
@@ -49,7 +50,8 @@ campoURL.addEventListener("blur", () => {
 });
 
 formProductos.addEventListener("submit", guardarProducto);
-btnNuevo.addEventListener("click", limpiarFormulario)
+btnNuevo.addEventListener("click", limpiarFormulario);
+btnDatosPrueba.addEventListener("click", cargarDatosPrueba)
 //Llamo a la función cargaInicial(): si tengo productos en el localStorage, los muestre en la tabla
 
 cargaInicial();
@@ -252,4 +254,32 @@ window.borrarProducto = function (codigo) {
       });
     }
   });
+};
+
+function cargarDatosPrueba(){
+  const datos = [
+    {
+      codigo:"123",
+      producto:"Ironman",
+      cantindad:"1",
+      descripcion:"SuperHéroe Avenger",
+      url:"https://pixabay.com/es/illustrations/hombre-de-acero-bebe-ironman-7775599/",
+    },
+    {
+      codigo:"321",
+      producto:"StarLord",
+      cantindad:"1",
+      descripcion:"SupeHéroe Guardianes de la Galaxia",
+      url:"https://images.app.goo.gl/cRQEkYXfT7C9ABx49",
+    }
+  ];
+  if (!localStorage.getItem("arrayProductosKey")) {
+    //Quiero agregar los datos de productos
+    localStorage.setItem("arrayProductosKey", JSON.stringify(datos));
+    listaProductos = datos;
+    //Mostrar en la tabla
+    listaProductos.forEach(itemProducto => {
+      crearFila(itemProducto);
+    })
+  }
 };
