@@ -4,7 +4,7 @@
 
 Este proyecto permite agregar, editar, borrar productos por medio de una página de Admin y mostrar los productos en una principal.
 
-[Ver DEMO](https://github.com/Enzo0026/practicaCRUD-65i)
+[Ver DEMO](https://crud65i.netlify.app)
 
 ## Librerias Externas
 - Bootstrap
