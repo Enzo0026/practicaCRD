@@ -2,13 +2,13 @@ export class Producto {
   constructor(
     parametroCodigo,
     parametroProducto,
-    paramentroDescripcion,
+    parametroDescripcion,
     parametroCantidad,
     parametroURL
   ) {
     this.codigo = parametroCodigo;
     this.producto = parametroProducto;
-    this.descripcion = paramentroDescripcion;
+    this.descripcion = parametroDescripcion;
     this.cantidad = parametroCantidad;
     this.url = parametroURL;
   }
@@ -46,5 +46,4 @@ export class Producto {
   set modificarUrl(nuevoUrl){
     this.url = nuevoUrl;
   }
-
 }

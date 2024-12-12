@@ -85,7 +85,7 @@ function crearProducto() {
 
   //crear un objeto producto
   let productoNuevo = new Producto(
-    campoCodigo.codigo,
+    campoCodigo.value,
     campoProducto.value,
     campoDescripcion.value,
     campoCantidad.value,
@@ -101,7 +101,7 @@ function crearProducto() {
   Swal.fire({
     title: "Producto creado",
     text: "Su producto fue creado correctamente!",
-    icon: "success"
+    icon: "success",
   });
   //Cargar el producto a la tabla
   crearFila(productoNuevo);
@@ -133,10 +133,10 @@ function crearFila(producto) {
       <td scope="col">${producto.descripcion}</td>
       <td scope="col">${producto.cantidad}</td>
       <td scope="col">${producto.url}</td>
-      <td> <button class="btn btn-warning mb-3" onclick ="prepararEdicionProducto('${producto.codigo}')">
+      <td><button class="btn btn-warning mb-3" onclick="prepararEdicionProducto('${producto.codigo}')">
           Editar
         </button>
-        <button class="btn btn-danger mb-3" onclick="borrarProducto()">
+        <button class="btn btn-danger mb-3" onclick="borrarProducto('${producto.codigo}')">
           Eliminar
         </button>
       </td>
@@ -158,7 +158,7 @@ function cargaInicial() {
 window.prepararEdicionProducto = function (codigo) {
   //Buscar el producto en el array de productos
   let productoBuscado = listaProductos.find(
-    () => itemProducto.codigo === codigo
+    (itemProducto) => itemProducto.codigo === codigo
   );
   //Mostrar el producto en el formulario. No se debe poder editar el código
   campoCodigo.value = productoBuscado.codigo;
@@ -171,6 +171,84 @@ window.prepararEdicionProducto = function (codigo) {
   productoExistente = true;
 };
 
-function modificarProducto(){
-  console.log();
+function modificarProducto() {
+  Swal.fire({
+    title: "Seguro que desea editar este producto?",
+    text: "Puede volve a editar este producto si lo desea!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Confirmar!",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      //Encontrar la posición del elemento que quiero modificar dentro de mi array de productos
+      let indiceProducto = listaProductos.findIndex(
+        (itemProducto) => itemProducto.codigo === campoCodigo.value
+      );
+      //Modificar los valores del elemento del array
+      listaProductos[indiceProducto].producto = campoProducto.value;
+      listaProductos[indiceProducto].descripcion = campoDescripcion.value;
+      listaProductos[indiceProducto].cantidad = campoCantidad.value;
+      listaProductos[indiceProducto].url = campoURL.value;
+
+      //Actualizar el localStorage
+      guardarLocalStorage();
+      //Actualizar la tabla
+      borrarTabla();
+      cargaInicial();
+
+      //Mostrar un cartel al usuario
+      Swal.fire({
+        title: "Producto modificado",
+        text: "Su producto fue modificado correctamente!",
+        icon: "success",
+      });
+
+      //Limpiar el formulario y resetear la variable bandera
+      limpiarFormulario();
+    }
+  });
 }
+
+function borrarTabla() {
+  let tablaProductos = document.querySelector("#tablaProductos");
+  tablaProductos.innerHTML = "";
+}
+
+window.borrarProducto = function (codigo) {
+  Swal.fire({
+    title: "Seguro que desea eliminar este producto?",
+    text: "La acción no podrá revertirse!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Confirmar!",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      //Opción 1: encontrar la posición o el índice del elemento en el array y borrarlo
+      //1ero: encontrar el índice con findIndex y usar splice(indiceEncontrado, 1)
+      //Opción 2: usando filter
+      let nuevaListaProductos = listaProductos.filter(
+        (itemProducto) => itemProducto.codigo !== codigo
+      );
+      //Actualizar el array original y localStorage
+      listaProductos = nuevaListaProductos;
+      guardarLocalStorage();
+
+      //Actualizar la tabla
+      borrarTabla();
+      cargaInicial();
+
+      //Mostrar cartel al usuario
+      Swal.fire({
+        title: "Producto eliminado",
+        text: "Su producto fue eliminado correctamente!",
+        icon: "success",
+      });
+    }
+  });
+};
